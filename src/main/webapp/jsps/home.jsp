@@ -9,8 +9,8 @@
 </head>
 </head>
 <body>
-<h1 align="center">Welcome to Pixel cloud Photography </h1>
-<h1 align="center"> Potrait, Fashion, Fine Art and Events photography,Chennai</h1>
+<h1 align="center">Pixel cloud by senthilraja </h1>
+<h1 align="center"> photography-Chennai</h1>
 <hr>
 <br>
 	<h1><h3> Server Side IP Address </h3><br>
