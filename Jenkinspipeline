@@ -1,6 +1,6 @@
 node{
 
-def mavenHome = tool name: "maven3.8.6"
+def mavenHome = tool name:"maven3.8.6"
 stage('CheckOutCode'){
 git branch: 'development', credentialsId: 'bf8206be-e65d-4c6e-b9dc-973bc984f7f1', url: 'https://github.com/csenthilraja/maven-web-application-1.git'
 }
