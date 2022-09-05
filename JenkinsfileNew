@@ -1,3 +1,5 @@
+@Library ("sharedlibs") -
+
 node{
 
 def mavenHome = tool name: "maven3.8.6"
@@ -6,7 +8,7 @@ echo "Node Name is: ${env.NODE_NAME}"
 echo "Job name is: ${env.JOB_NAME}"
 
 try {
-slackNotifications('STARTED')
+sendSlackNotifications('STARTED')
 stage('CheckOutCode'){
 git branch: 'development', credentialsId: 'bf8206be-e65d-4c6e-b9dc-973bc984f7f1', url: 'https://github.com/csenthilraja/maven-web-application-1.git'
 }
@@ -31,18 +33,18 @@ sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war  ec2-user@1
 }//try block closing
 
 catch (e){
-slackNotifications('FAILED')
+sendSlackNotifications('FAILED')
 throw e
 }
 finally{
-slackNotifications(currentBuild.result)
+sendSlackNotifications(currentBuild.result)
 }
 
 }//node closing
 
 //Code Snippet for sending slack notifications.
 
-def slackNotifications(String buildStatus = 'STARTED') {
+def sendSlackNotifications(String buildStatus = 'STARTED') {
   // build status of null means successful
   buildStatus =  buildStatus ?: 'SUCCESS' 
   
