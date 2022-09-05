@@ -1,0 +1,55 @@
+pipeline{
+
+agent any
+
+options {
+  timestamps()
+  buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))
+  
+}
+
+triggers {
+  pollSCM('* * * * *')
+  //cron ('* * * * *')
+}
+
+tools{
+maven 'maven3.8.6'
+}
+//This stage will get the Source from the Github
+stages{
+stage('CheckOutCode'){
+steps{
+git branch: 'development', credentialsId: 'bf8206be-e65d-4c6e-b9dc-973bc984f7f1', url: 'https://github.com/csenthilraja/maven-web-application-1.git'
+}
+}
+//This stage will do the build
+stage('Build'){
+steps{
+sh "mvn clean package"
+}
+}
+//This Stage will be execute SonarQube Report
+stage('ExecuteSonarQubeReport'){
+steps{
+sh "mvn clean sonar:sonar"
+}
+}
+//This stage will Upload the Artifcats into Nexus Repos
+stage('UploadArtifactIntoArtifactoryRepo'){
+steps{
+sh "mvn clean deploy"
+}
+}
+//Deploy Application Into Tomcat Server
+stage('DeployAppIntoTomcatServer')
+{
+steps{
+sshagent(['e50d38e8-f0bc-484a-ac0f-53d0f2138ac4']) {
+sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war  ec2-user@172.31.37.110:/opt/apache-tomcat-9.0.65/webapps/"
+}
+}
+}
+}
+
+}
